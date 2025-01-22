@@ -1,0 +1,280 @@
+﻿@{
+    ViewData["Title"] = "Crear Cotizacion";
+   // Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Create Invoice</p>
+</div>
+@* card *@
+<div class="card">
+
+   <div class="card-body" >
+        <div class="row">
+            <div class="col-sm-2">
+                <label class="form-label">Date</label>
+                <input class="form-control form-control-sm" type="date" id="dtfecha"/>
+            </div>
+            <div class="col-sm-2">
+                <label class="form-label">Name</label>
+                <input class="form-control form-control-sm" type="text" id="txtname" />
+            </div>
+            <div class="col-sm-2">
+                <label class="form-label">Nit</label>
+                <input class="form-control form-control-sm" type="text" id="txtnit" />
+            </div>
+            <div class="col-sm-4">
+                <label class="form-label">Customer</label>
+                <input class="form-control form-control-sm txtmayusculas" type="text" id="txtcliente" />
+            </div>
+            <div class="col-sm-4">
+                <label class="form-label">Adress</label>
+                <input class="form-control form-control-sm txtmayusculas" type="text" id="txtdireccion" />
+            </div>
+            <div class="col-sm-2">
+                <label class="form-label">Telephone</label>
+                <input class="form-control form-control-sm txtmayusculas" type="text" id="txttelefono" />
+            </div>
+            <div class="col-sm-2">
+                <label class="form-label">Po#</label>
+                <input class="form-control form-control-sm txtmayusculas" type="text" id="txtpo" />
+            </div>
+            <div class="col-sm-1">
+                <input class="form-control form-control-sm" type="hidden" id="txtid_persona" />
+                
+            </div>
+            <div class="col-sm-2">
+                <h1 align="right" id="lbltotal">Total </h1>
+                
+            </div>
+        </div>
+       
+
+    
+    <hr style="border: none; height: 2px; background-color: black;" />
+
+    <div class="row">
+        <div class="col-sm-2">
+            <label class="form-label">Date</label>
+            <input class="form-control form-control-sm" type="date" id="dtfechadetalle" />
+        </div>
+        <div class="col-sm-2">
+            <label class="form-label" id="lblstore">Store</label>
+            <input class="form-control form-control-sm txtmayusculas" type="text" id="txtstore" />
+        </div>
+        <div class="col-sm-3">
+            <label class="form-label" id="lblproducto">Description</label>
+            <input class="form-control form-control-sm txtmayusculas" type="text" id="txtproducto" />
+        </div>
+        <div class="col-sm-2">
+            <label class="form-label" id="lblcantidad">Sku</label>
+            <input class="form-control form-control-sm txtsolo-numeros" type="text" id="txtcantidad" />
+        </div>
+        <div class="col-sm-2">
+            <label class="form-label" id="lblprecio">Amount</label>
+            <input class="form-control form-control-sm txtsolo-numeros" type="text" id="txtprecio" />
+        </div>
+         <div class="col-sm-2" style="align-items: center">
+                <button class="btn btn-success" id="btnAgregar" style="margin-top: 10px;">Agregar</button>
+                <button class="btn btn-primary" id="btnActualizar" style="margin-top: 10px;">Save</button>
+         </div>
+    </div>
+  </div>
+    <hr />
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-bordered table-sm" id="tbproducto">
+                <thead>
+                    <tr class="table-dark">
+                        <th>Date</th>
+                        <th>Store</th>
+                        <th>Description</th>
+                        <th>Sku</th>
+                        <th>Amount</th>
+                        <th>Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts{
+    <script>
+    //VARIABLES PARA VALIDAR DATA ANTES DE ACTUALIZAR
+        var cliente = "";
+        var productos=0;
+        var total_general = 0;
+    //COLOCA FECHA ACTUAL
+        $(document).ready(function () {
+            var fecha = new Date();
+            var año = fecha.getFullYear();
+            var mes = (fecha.getMonth() + 1).toString().padStart(2, '0');  // Los meses van de 0 a 11, por eso sumamos 1
+            var dia = fecha.getDate().toString().padStart(2, '0');  // Asegura que el día tenga dos dígitos
+
+            // Formatear la fecha en el formato YYYY-MM-DD
+            var fechaFormateada = año + '-' + mes + '-' + dia;
+
+            // Asignar la fecha formateada al campo tipo "date"
+            $('#dtfecha').val(fechaFormateada);
+            $('#dtfechadetalle').val(fechaFormateada);
+        });
+    //BUSCAR CLIENTES codigo JavaScript
+
+        let cli = document.getElementById("txtnit");
+        cli.addEventListener("keypress", function p(event) 
+        {
+            if (event.key == 'Enter' && document.getElementById("txtnit").value != "")
+            {
+                let ced = document.getElementById("txtnit").value;
+                buscarPersona(ced);
+                //console.log("puebas de Cedula " + ced);
+            }
+            //else {alert("otra tecla" + event.key) }
+        });
+    //BOTON AGREGAR     
+       $("#btnAgregar").on("click", function () {
+            if ($("#txtproducto").val().trim() === "" || $("#txtcantidad").val().trim() === "" || $("#txtprecio").val().trim() === "") {
+                alert("No ha registrado..Producto, cantidad o precio..!!");
+                $("#txtproducto").focus();
+           }         
+           else 
+                {
+                var total = parseFloat($("#txtprecio").val()) //* parseFloat($("#txtcantidad").val())
+
+                $("#tbproducto tbody").append(
+
+                    $("<tr>").append(
+                        $("<td>").text($("#dtfechadetalle").val()),
+                        $("<td>").text($("#txtstore").val()),
+                        $("<td>").text($("#txtproducto").val()),
+                        $("<td>").text($("#txtcantidad").val()),
+                        $("<td>").text($("#txtprecio").val()),
+                        //$("<td>").text(total),
+                        $(`<button type="button" id="btnEliminar" title="Eliminar" class="btn btn-primary btn-delete";">Eliminar</i></button>`)
+                        
+                    )
+                )
+                $("#txtstore").val("")
+                $("#txtproducto").val("")
+                $("#txtprecio").val("")
+                $("#txtcantidad").val("")
+                $("#txtproducto").focus();
+                productos = productos + 1;
+                total_general = total_general + total;
+                $("#lbltotal").text(total_general);
+           }
+               
+       })
+        
+        
+     //BOTON ACTUALIZAR
+        $("#btnActualizar").on("click", function () 
+        {
+            var odetalle = []
+            var total = 0
+            if (productos > 0 && cliente === "OK") {
+                $("#tbproducto > tbody > tr").each(function (i, tr) {
+
+                    odetalle.push(
+                        {
+                            Fecha: $(tr).find('td:eq(0)').text(),
+                            Store: $(tr).find('td:eq(1)').text(),
+                            ProductoNombre: $(tr).find('td:eq(2)').text(),
+                            Cantidad: $(tr).find('td:eq(3)').text(),
+                            Precio: $(tr).find('td:eq(4)').text(),
+                            Total: $(tr).find('td:eq(4)').text()
+                        }
+                    )
+                    total = total + parseFloat($(tr).find('td:eq(4)').text())
+                })
+                //ARMADO DE OBJETO SEGUN MOLDE DE COT_COTIZACION VIEW MODEL
+                var oCotizacionVM =
+                {
+                    oCotizacion:
+                    {
+                        Fecha: $("#dtfecha").val(),//"2025-01-02",
+                        id_persona: $("#txtid_persona").val(),
+                        Name: $("#txtname").val(),
+                        Po: $("#txtpo").val(),
+                        Total: total
+
+                    },
+                    oDetalleCotizacion: odetalle
+                }
+                //PROCESO AJAX PARA ENVIAR LOS DATOS AL METODO DEL CONTROLADOR
+                jQuery.ajax(
+                    {
+                        url: '@Url.Action("Index", "Home")',
+                        type: "POST",
+                        data: JSON.stringify(oCotizacionVM),
+                        datatype: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+                            if (data.respuesta) {
+                                alert("Venta Resgistrada")
+                                location.reload();
+                            }
+                        }
+                    })
+            }
+            else
+            { 
+                alert("No se puede Actualizar faltan datos de Clientes o Productos..!!!");
+            }
+        })
+       //FUNCION PARA ELIMINAR DATOS DE LA VENTANA ANTES DE ACTUALIZAR
+        $(document).on('click', '.btn-delete', function (evento) { //EVENTO PARA EL BOTON CREADO
+            evento.preventDefault();
+            //console.log($(this).parent().children().last().text());//selecciona la primera columna de la fila que seleccione
+            $(this).closest('tr').remove();//ELIMINA LA FILA SELECCIONADA
+            productos = productos - 1;
+            $("#txtproducto").focus();//COLOCA EL ENFOQUE EN EL CAMPO DE TEXTO PRODUCTO
+            //console.log($(this).parent().children().eq(-2).text());//selecciona la PENULTIMA columna de la fila que seleccione
+            total_general = total_general - $(this).parent().children().eq(-2).text();
+            $("#lbltotal").text(total_general);
+        });
+       //VALIDA QUE LOS CAMPOS CANTIDAD Y PRECIO SE DIGITEN SOLO NUMEROS
+        $('.txtsolo-numeros').on('input', function () {
+            $(this).val($(this).val().replace(/[^0-9.,]/g, '')); // Elimina caracteres no numéricos
+        });
+        //CONVIERTE A MAYUSCULAS LO QUE SE DIGITE EN PRODUCTO
+        $('.txtmayusculas').on('input', function () {
+            $(this).val($(this).val().toUpperCase()); // convierte de Mnusculas a Mayusculas
+        });
+    </script>
+    <script>
+        //BUSCA CLIENTE SEGUN EL NUMERO DE CEDULA DIGITADO
+        function buscarPersona(nit) {   //console.log(cedula)
+            $.ajax(
+                {
+                    type: "GET",
+                    url: '@Url.Action("_buscaPersona", "Home")?nit=' + nit,
+                    success: function (data) {
+                        if (data.nit == null) {
+                            //document.getElementById("name").value = "No Existe Customer";
+                            alert("Cedula no existe");
+                        }
+                        else {
+                            console.log(data)
+                            document.getElementById("txtcliente").value = data.nombres;
+                            document.getElementById("txtdireccion").value = data.direccion;
+                            document.getElementById("txttelefono").value = data.telefono;
+                            document.getElementById("txtid_persona").value = data.id;
+                            cliente = "OK";
+                        }
+
+                    }
+
+                }
+            )
+        }
+    </script>
+   
+}

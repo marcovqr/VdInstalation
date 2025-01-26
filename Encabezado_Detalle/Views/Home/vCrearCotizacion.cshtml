@@ -243,6 +243,8 @@
                         success: function (data) {
                             if (data.respuesta) {
                                 alert("Invoice Save..!!!")
+                                // Abrir el PDF en una nueva pestaña
+                                window.open(data.pdfUrl, '_blank');
                                 location.reload();
                             }
                         }

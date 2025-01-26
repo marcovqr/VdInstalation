@@ -1,4 +1,4 @@
-﻿@model List<Encabezado_Detalle.Models.ViewModels.cotizacionVM_MaestroDetalle>
+﻿@model cot_cotizacion
 @{
    //ViewData["Title"] = "creaPDF";
    Layout = null;
@@ -221,15 +221,13 @@ background-color: #f7f7ff;
                                 <div class="row contacts">
                                     <div class="col invoice-to">
                                         <div class="text-gray-light">INVOICE TO:</div>
-                                        <h2 class="to">John Doe</h2>
-                                        <div class="address">796 Silver Harbour, TX 79273, US</div>
-                                        <div class="email">
-                                            <a href="mailto:john@example.com">john@example.com</a>
-                                        </div>
+                                        <h2 class="to">@Model.customer</h2>
+                                        <div class="address">@Model.adress</div>
+                                        <div class="email">@Model.telf</div>
                                     </div>
                                     <div class="col invoice-details">
-                                        <h1 class="invoice-id">INVOICE 3-2-1</h1>
-                                        <div class="date">Date of Invoice: 01/10/2018</div>
+                                        <h1 class="invoice-id">INVOICE #@Model.id</h1>
+                                        <div class="date">Date of Invoice: @Model.Fecha.ToString("MM/dd/yyyy")</div>
                                         @* <div class="date">Due Date: 30/10/2018</div> *@
                                     </div>
                                 </div>
@@ -244,28 +242,17 @@ background-color: #f7f7ff;
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td class="text-bg-dark"><h2>01/25/2025</h2></td>
-                                            <td class="text-left">
-                                                <h2>
-                                                    123
-                                                </h2>
-                                                
-                                            </td>
-                                            <td class="text-left"><h2>instalation</h2></td>
-                                            <td class="qty"><h2>100</h2></td>
-                                            <td class="text-rigth"><h2>0.00</h2></td>
-                                        </tr>
-                                        <tr>
-                                            <td class=" text-bg-dark"><h2>01/25/2025</h2></td>
-                                            <td class="text-left">
-                                                <h2>456</h2>
-                                            </td>
-                                            <td class="text-left"><h2>medidas</h2></td>
-                                            <td class="qty"><h2>30</h2></td>
-                                            <td class="text-rigth"><h2>$1,200.00</h2></td>
-                                        </tr>
-                                        
+                                        @foreach (var detalle in Model.detalles)
+                                        {
+                                            <tr>
+                                                <td>@detalle.Fecha.Value.ToShortDateString()</td>
+                                                <td>@detalle.Store
+                                                <td>@detalle.ProductoNombre</td>
+                                                <td>@detalle.Cantidad</td>
+                                                <td>@detalle.Precio</td>
+                                            </tr>
+                                        }
+
                                     </tbody>
                                     <tfoot>
                                         @* @* <tr>
@@ -281,7 +268,7 @@ background-color: #f7f7ff;
                                         <tr>
                                             <td colspan="2"></td>
                                             <td colspan="2">GRAND TOTAL</td>
-                                            <td>$6,500.00</td>
+                                            <td>$@Model.Total</td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -301,9 +288,7 @@ background-color: #f7f7ff;
 </html> 
 @section scripts
 {
-    <script>
-         
-    </script>
+   
 
 
 }

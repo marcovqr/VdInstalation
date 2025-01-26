@@ -33,17 +33,69 @@ namespace Encabezado_Detalle.Controllers
                 oCotizacion.detalles = oCotizacionVM.oDetalleCotizacion;
                 _context.Cotizaciones.Add(oCotizacion);
                 _context.SaveChanges();
-                return Json(new { respuesta = true });
+
+                // Retornar JSON con una URL para el PDF
+                string pdfUrl = Url.Action("GenerarPdf", "Home", new { id = oCotizacion.id }, Request.Scheme);
+                return Json(new { respuesta = true, pdfUrl });
             }
-            catch (Exception )
+            catch (Exception ex)
             {
-                return Json(new { respuesta = false });
+                return Json(new { respuesta = false, error = ex.Message });
                 throw;
                 
 
             }
            
            
+        }
+        // Acción para generar el PDF con Rotativa
+        public IActionResult GenerarPdf(int id)
+        {
+            // Buscar la cotización en la base de datos
+            var oCotizacion = _context.Cotizaciones
+                .Include(c => c.detalles) // Incluir los detalles relacionados
+                .FirstOrDefault(c => c.id == id);
+
+            if (oCotizacion == null)
+            {
+                return NotFound("Invoice not found.");
+            }
+
+            // Generar el PDF usando Rotativa
+            return new Rotativa.AspNetCore.ViewAsPdf("creaPDF", oCotizacion)
+            {
+                //FileName = $"Cotizacion_{oCotizacion.id}.pdf",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                CustomSwitches = "--disable-smart-shrinking"
+            };
+        }
+        public IActionResult GeneraPDF_Listado(int id)
+        {
+            try
+            {
+                // Buscar la cotización en la base de datos
+                var oCotizacion = _context.Cotizaciones
+                    .Include(c => c.detalles) // Incluir los detalles relacionados
+                    .FirstOrDefault(c => c.id == id);
+
+                if (oCotizacion == null)
+                {
+                    return NotFound("Invoice not found.");
+                }
+                // Retornar JSON con una URL para el PDF
+                string pdfUrl = Url.Action("GenerarPdf", "Home", new { id = oCotizacion.id }, Request.Scheme);
+                return Json(new { respuesta = true, pdfUrl });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { respuesta = false, error = ex.Message });
+                throw;
+
+
+            }
+
+
         }
         public IActionResult vCrearCotizacion()
         {

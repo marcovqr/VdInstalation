@@ -37,6 +37,7 @@
 
   <ItemGroup>
     <Folder Include="Rotativa\" />
+    <Folder Include="Views\cCrearPDF\" />
     <Folder Include="Views\Invoice\" />
     <Folder Include="Views\Login\" />
   </ItemGroup>

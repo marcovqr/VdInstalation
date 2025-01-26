@@ -206,7 +206,7 @@
                             item.Telefono,
                             item.Po,
                             item.Total,
-                             '<a href="#" onclick="Detalles(' + item.Id + ')" <i class="fa fa-list-alt" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <a href="#" onclick="_crearPDF()" <i class="fa fa-file" aria-hidden="true"></i></a>'
+                            '<a href="#" onclick="Detalles(' + item.Id + ')" <i class="fa fa-list-alt" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <a href="#" onclick="_crearPDF(' + item.Id + ')" <i class="fa fa-file" aria-hidden="true"></i></a>'
                             //'<a href="#" onclick="Detalles(' + item.Id + ')" <i class="fa fa-list-alt" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <a href="#" onclick="_crearPDF(' + item.Id + ')" <i class="fa fa-file" aria-hidden="true"></i></a>'
                         ]);
                     });
@@ -250,19 +250,47 @@
             );
         }
         //fin Codigo para el Modal
-        //llamada para crear PDF
         
-        //fin de creacion PDF
     </script>
     <script>
-        function _crearPDF()
-        {
-           
-           $.notify("PDF Correctamente", "success");
+        //Inicio de creacion PDF desde el Reporte/boton tipo icono para crear pdf
+        function _crearPDF(Id)
+        {   //Pregunta si en Id viene el id del invoice caso contrario no sigue
+            if (!Id) {
+                alert('ID de cotización no especificado.');
+                return;
+            }
+            //Proceso ajax para llamar al controlador enviandole un parametro y me devuelve un resultado
+            try {
+                $.ajax({
+                    url: '/Home/GeneraPDF_Listado?id=' + Id, // Ruta correcta
+                    type:'GET',
+                    success: function (data) 
+                    {
+                        if (data.respuesta && data.pdfUrl) {
+                            $.notify("PDF generado correctamente.", "success");
+                            // Abrir el PDF en una nueva pestaña
+                            window.open(data.pdfUrl, '_blank');
+                        } else {
+                            $.notify(data.mensaje || "Error al generar el PDF.", "error");
+                           
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error al obtener los datos AJAX:', error);
+                        // Notificación de error
+                        $.notify("Error al cargar los datos AJAX", "error");
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Ocurrió un error al procesar la solicitud TRY CATCH.');
+            }
                        
         }
-
+        //fin de creacion PDF desde el Reporte/boton tipo icono para crear pdf
     </script>
+    
     
        
 }

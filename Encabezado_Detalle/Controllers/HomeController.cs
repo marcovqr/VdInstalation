@@ -76,7 +76,7 @@ namespace Encabezado_Detalle.Controllers
                 }
                 else
                 {
-                    //ViewBag.Message("Customer no Existe");
+                   // ViewBag.Message("Customer no Existe");
                     return Json(model);
                 }
 

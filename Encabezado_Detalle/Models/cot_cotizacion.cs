@@ -18,6 +18,12 @@ namespace Encabezado_Detalle.Models
         [StringLength(50)]
         public string? Name { get; set; }
         [StringLength(50)]
+        public string? customer { get; set; }
+        [StringLength(150)]
+        public string? adress { get; set; }
+        [StringLength(50)]
+        public string? telf { get; set; }
+        [StringLength(50)]
         public string? Po { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal Total { get; set; }

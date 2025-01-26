@@ -9,8 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DinkToPdf" Version="1.0.8" />
-    <PackageReference Include="itext" Version="9.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
@@ -18,6 +16,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+    <PackageReference Include="Rotativa.AspNetCore" Version="1.4.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,6 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Rotativa\" />
     <Folder Include="Views\Invoice\" />
     <Folder Include="Views\Login\" />
   </ItemGroup>

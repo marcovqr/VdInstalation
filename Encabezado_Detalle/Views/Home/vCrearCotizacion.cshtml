@@ -19,10 +19,10 @@
                 <label class="form-label">Name</label>
                 <input class="form-control form-control-sm" type="text" id="txtname" />
             </div>
-            <div class="col-sm-2">
+            @* <div class="col-sm-2">
                 <label class="form-label">Nit</label>
-                <input class="form-control form-control-sm" type="text" id="txtnit" />
-            </div>
+                <input class="form-control form-control-sm" type="hidden" id="txtnit" />
+            </div> *@
             <div class="col-sm-4">
                 <label class="form-label">Customer</label>
                 <input class="form-control form-control-sm txtmayusculas" type="text" id="txtcliente" />
@@ -40,7 +40,7 @@
                 <input class="form-control form-control-sm txtmayusculas" type="text" id="txtpo" />
             </div>
             <div class="col-sm-1">
-                <input class="form-control form-control-sm" type="hidden" id="txtid_persona" />
+                <input class="form-control form-control-sm" type="hidden" id="txtid_persona" value="1" />
                 
             </div>
             <div class="col-sm-2">
@@ -125,19 +125,40 @@
             $('#dtfecha').val(fechaFormateada);
             $('#dtfechadetalle').val(fechaFormateada);
         });
-    //BUSCAR CLIENTES codigo JavaScript
-
-        let cli = document.getElementById("txtnit");
-        cli.addEventListener("keypress", function p(event) 
+    //VALIDA CAMPOS DE CLIENTES QUE ESTEN LLENOS
+        var cli = $("#txtcliente").val().trim();
+        var adr = $("#txtdireccion").val().trim();
+        var tel = $("#txttelefono").val().trim();
+        if (!cli) 
         {
-            if (event.key == 'Enter' && document.getElementById("txtnit").value != "")
+            if (!adr) 
             {
-                let ced = document.getElementById("txtnit").value;
-                buscarPersona(ced);
-                //console.log("puebas de Cedula " + ced);
+                if (!tel) 
+                {
+                    cliente = "OK"
+                }
+                else { var mensaje = "Data the telephone not exists..!!!" }
+                    
             }
-            //else {alert("otra tecla" + event.key) }
-        });
+            else { var mensaje = "Data the Adress not exists..!!!" }
+        }
+        else { var mensaje = "Data the Customer not exists..!!!" }
+            
+    //FIN DE VALIDACION
+
+    //BUSCAR CLIENTES codigo JavaScript funcionando pero no aplica para el caso
+
+        // let cli = document.getElementById("txtnit");
+        // cli.addEventListener("keypress", function p(event) 
+        // {
+        //     if (event.key == 'Enter' && document.getElementById("txtnit").value != "")
+        //     {
+        //         let ced = document.getElementById("txtnit").value;
+        //         buscarPersona(ced);
+        //         //console.log("puebas de Cedula " + ced);
+        //     }
+        //     //else {alert("otra tecla" + event.key) }
+        // });
     //BOTON AGREGAR     
        $("#btnAgregar").on("click", function () {
             if ($("#txtproducto").val().trim() === "" || $("#txtcantidad").val().trim() === "" || $("#txtprecio").val().trim() === "") {
@@ -157,7 +178,7 @@
                         $("<td>").text($("#txtcantidad").val()),
                         $("<td>").text($("#txtprecio").val()),
                         //$("<td>").text(total),
-                        $(`<button type="button" id="btnEliminar" title="Eliminar" class="btn btn-primary btn-delete";">Eliminar</i></button>`)
+                        $(`<button type="button" id="btnEliminar" title="Eliminar" class="btn btn-primary btn-delete";">Delete</i></button>`)
                         
                     )
                 )
@@ -203,6 +224,9 @@
                         id_persona: $("#txtid_persona").val(),
                         Name: $("#txtname").val(),
                         Po: $("#txtpo").val(),
+                        customer: $("#txtcliente").val(),
+                        adress: $("#txtdireccion").val(),
+                        telf: $("#txttelefono").val(),
                         Total: total
 
                     },
@@ -218,15 +242,16 @@
                         contentType: "application/json; charset=utf-8",
                         success: function (data) {
                             if (data.respuesta) {
-                                alert("Venta Resgistrada")
+                                alert("Invoice Save..!!!")
                                 location.reload();
                             }
                         }
                     })
             }
             else
-            { 
-                alert("No se puede Actualizar faltan datos de Clientes o Productos..!!!");
+            {
+                alert("Cannot Update, Customer or Products data is missing..!!!");
+                //volver a consultar el cliente que se crea automaticamente
             }
         })
        //FUNCION PARA ELIMINAR DATOS DE LA VENTANA ANTES DE ACTUALIZAR
@@ -260,6 +285,7 @@
                         if (data.nit == null) {
                             //document.getElementById("name").value = "No Existe Customer";
                             alert("Cedula no existe");
+                            //Enviar los datos para que se cree el cliente en caso q no exista
                         }
                         else {
                             console.log(data)

@@ -46,10 +46,14 @@ namespace Encabezado_Detalle.Controllers
                                                         {
                                                             Id=x.id,
                                                             fecha = x.Fecha.ToString("yyyy-MM-dd"),
-                                                            nombres = x.personas.nombres,
-                                                            nit=x.personas.nit,
-                                                            direccion = x.personas.direccion,
-                                                            Telefono = x.personas.Telefono,
+                                                            //nombres = x.personas.nombres,
+                                                            //nit=x.personas.nit,
+                                                            //direccion = x.personas.direccion,
+                                                            //Telefono = x.personas.Telefono,
+                                                            nombres=x.customer,
+                                                            direccion=x.adress,
+                                                            Telefono=x.telf,
+                                                            Po=x.Po,
                                                             Total = x.Total
                                                            //detalles = string.Join(", ", x.detalles.Select(d => d.Descripcion)) // Concatenar detalles
 

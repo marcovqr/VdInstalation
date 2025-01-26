@@ -42,9 +42,9 @@
                         <th>Id</th>
                         <th>Date</th>
                         <th>Customer</th>
-                        <th>Nit</th>
                         <th>Adress</th>
                         <th>Telephone</th>
+                        <th>Po#</th>
                         <th>Total</th>
                         <th>Details</th>  
                     </tr>
@@ -95,12 +95,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
     <script src="~/assets/js/notify.js"></script>
     <script src="~/assets/js/notify.min.js"></script> *@
+    
     <!-- Codigo para Cerrar el Modal al dar clic en Cerrar -->
     <script>
         document.querySelector('button[data-dismiss="modal"]').addEventListener('click', function () {
             $('#idModalDetalle').modal('hide'); // Usando jQuery para cerrar el modal
         });
     </script>
+    <!-- Fin codigo para Cerrar el Modal al dar clic en Cerrar -->
     <!-- Inicializa los campos fecha, sin este codigo no funciona -->
     <script type="text/javascript">
               $(function () {
@@ -143,11 +145,11 @@
                         },
                         {
                             target: 3,
-                            width: "10%"
+                            width: "30%"
                         },
                         {
                             target: 4,
-                            width: "30%"
+                            width: "00%"
                         },
                         {
                             target: 5,
@@ -200,11 +202,12 @@
                             item.Id,
                             item.fecha,
                             item.nombres,
-                            item.nit,
                             item.direccion,
                             item.Telefono,
+                            item.Po,
                             item.Total,
-                            '<a href="#" onclick="Detalles(' + item.Id + ')" <i class="fa fa-list-alt" aria-hidden="true"></i></a>'
+                             '<a href="#" onclick="Detalles(' + item.Id + ')" <i class="fa fa-list-alt" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <a href="#" onclick="_crearPDF()" <i class="fa fa-file" aria-hidden="true"></i></a>'
+                            //'<a href="#" onclick="Detalles(' + item.Id + ')" <i class="fa fa-list-alt" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <a href="#" onclick="_crearPDF(' + item.Id + ')" <i class="fa fa-file" aria-hidden="true"></i></a>'
                         ]);
                     });
 
@@ -247,7 +250,19 @@
             );
         }
         //fin Codigo para el Modal
+        //llamada para crear PDF
+        
+        //fin de creacion PDF
     </script>
-   
+    <script>
+        function _crearPDF()
+        {
+           
+           $.notify("PDF Correctamente", "success");
+                       
+        }
+
+    </script>
+    
        
 }

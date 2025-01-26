@@ -1,6 +1,7 @@
 using Encabezado_Detalle.BD;
 using Microsoft.EntityFrameworkCore;
 using System;
+using Rotativa.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -11,10 +12,13 @@ ConnetionString.Sql_conexion = builder.Configuration.GetConnectionString("Conexi
 builder.Services.AddDbContext<CotContext>(Options =>
     Options.UseSqlServer(ConnetionString.Sql_conexion)
 );
-
+    
 //****************************//
 
 var app = builder.Build();
+
+// Configura Rotativa  para generar PDF usando el método estático Setup
+RotativaConfiguration.Setup(app.Environment.ContentRootPath, "Rotativa");
 
 //*****mqr para Migrar la BD*******///
 using (var scope=app.Services.CreateScope())
@@ -42,5 +46,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 
 app.Run();

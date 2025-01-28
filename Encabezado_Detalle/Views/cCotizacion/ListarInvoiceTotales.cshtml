@@ -1,0 +1,171 @@
+﻿@model List<Encabezado_Detalle.Models.cot_cotizacion>
+@{
+    ViewData["Title"] = "Total Invoice";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+} 
+
+<h2>Total Invoice</h2>
+<div class="row-4" style="text-align:right;padding:5px">
+    <input type="button" class="btn btn-primary btn-sm" value="Crear PDF" onclick="_crearPDF()" />
+</div>
+<div class="row">
+    <div class=" col-md-12">
+        <div>
+            <div class="container" style="margin:inherit">
+                <!-- datetimePicker de inicio y fin -->
+                <div class="row form-group">
+                    <label class="col-sm-1" style="padding-right: 0px; padding-left: 0px">Inicio</label>
+                    <div class='input-group date col-sm-2' id='Inicio'>
+                        <input type='text' class="form-control" id="IdInicio" />
+                        
+                    </div>
+                    <label class="col-sm-1" style="padding-right:0px">Fin</label>
+                    <div class='input-group date col-sm-2' id='Fin'>
+                        <input type='text' class="form-control" id="IdFin" />
+                        
+                    </div>
+                    <!-- Boton -->
+                    <div class="col-sm-3">
+                        <input type="button" class="btn btn-primary btn-sm" value="Buscar" onclick="Buscar()" data-toggle="modal" data-target="#exampleModalCenter" />
+
+                    </div>
+                </div>
+            </div>
+            <!-- Table de Datos -->
+            <table id="tablaDatos" class="table table-striped table-responsive" style="font-size:11px;width:50%; display:inline-table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Date</th>
+                        <th>Total</th>
+                        
+                    </tr>
+
+                </thead>
+                <tbody>
+                    <!-- Los datos se llenarán aquí -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+  
+  <script>
+        // Inicializa la tabla DataTables UNA sola vez
+        $(document).ready(function () {
+            $('#tablaDatos').DataTable({
+                searching: true, // Habilitar búsqueda
+                paging: true,    // Habilitar paginación
+                info: true,      // Mostrar información de filas
+                responsive: true, // Hacer la tabla responsive
+                columnDefs:  //Personaliza las columnas
+                    [
+                        {
+                            "target": 0,
+                            "searchable": true,
+                            width: "5%"
+                        },
+                        {
+                            target: 1,
+                            width: "20%"
+                        },
+                        {
+                            "target": 2,
+                            "searchable": true,
+                            width: "20%"
+                        }
+                    ],
+            });
+        });
+    </script>
+
+    <script>
+       
+        function Buscar() {
+            var Inicio = document.getElementById('IdInicio').value;
+            var Fin = document.getElementById('IdFin').value;
+
+            $.ajax({
+                url: '/cCotizacion/ListarTotales?inicio=' + Inicio + '&fin=' + Fin, // Asegúrate de que la URL sea correcta
+                type: 'GET',
+                success: function (response) {
+                    // Notificación de éxito
+                    $.notify("Data Cargada Correctamente", "success");
+
+                    // Obtiene la instancia de DataTable
+                    var tabla = $('#tablaDatos').DataTable();
+
+                    // Limpia los datos existentes
+                    tabla.clear();
+
+                    // Itera sobre los datos recibidos y los agrega a la tabla
+                    response.forEach(function (item) {
+                        tabla.row.add([
+                            item.Id,
+                            item.fecha,
+                            item.Total,
+                           
+                        ]);
+                    });
+
+                    // Redibuja la tabla con los nuevos datos
+                    tabla.draw();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error al obtener los datos:', error);
+                    // Notificación de error
+                    $.notify("Error al cargar los datos", "error");
+                }
+            });
+        }
+
+        //fin funcion buscar
+       
+    </script>
+    <script>
+        //Inicio de creacion PDF desde el Reporte/boton tipo icono para crear pdf
+        function _crearPDF()
+        {   //Pregunta si en Id viene el id del invoice caso contrario no sigue
+            var Inicio = document.getElementById('IdInicio').value;
+            var Fin = document.getElementById('IdFin').value;
+            if (!Inicio && !Fin) {
+                alert('ID de Inicio o Fin Invoice no especificado.');
+                return;
+            }
+            //Proceso ajax para llamar al controlador enviandole un parametro y me devuelve un resultado
+            try {
+                $.ajax({
+                    url: '/Home/GeneraPDF_Totalizado?inicio=' + Inicio + '&fin=' + Fin, // Ruta correcta
+                    type:'GET',
+                    success: function (data)
+                    {
+                        if (data.pdfUrl) {
+                            $.notify("PDF generado correctamente.", "success");
+                            // Abrir el PDF en una nueva pestaña
+                            window.open(data.pdfUrl, '_blank');
+                        } else {
+                            $.notify(data.mensaje || "Error al generar el PDF.", "error");
+
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error al obtener los datos AJAX:', error);
+                        // Notificación de error
+                        $.notify("Error al cargar los datos AJAX", "error");
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Ocurrió un error al procesar la solicitud TRY CATCH.');
+            }
+
+        }
+        //fin de creacion PDF desde el Reporte/boton tipo icono para crear pdf
+    </script>
+
+
+
+}

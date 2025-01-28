@@ -70,21 +70,67 @@ namespace Encabezado_Detalle.Controllers
                 CustomSwitches = "--disable-smart-shrinking"
             };
         }
+        public IActionResult GeneraPDF_Total(int inicio,int fin)
+        {
+            // Buscar la cotización en la base de datos
+            var oCotizacion = _context.Cotizaciones
+                .Include(c => c.detalles) // Incluir los detalles relacionados
+                .Where(c => c.id >= inicio && c.id <= fin).ToList();
+
+            if (oCotizacion == null)
+            {
+                return NotFound("Invoice not found.");
+            }
+
+            // Generar el PDF usando Rotativa
+            return new Rotativa.AspNetCore.ViewAsPdf("creaPDF_Totalizado", oCotizacion)
+            {
+                //FileName = $"Cotizacion_{oCotizacion.id}.pdf",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                CustomSwitches = "--disable-smart-shrinking"
+            };
+        }
+        public IActionResult GeneraPDF_Totalizado(int inicio , int fin)
+        {
+            try
+            {
+                if (inicio == 0 && fin ==0)
+                {
+                    return NotFound("Invoice not found.");
+                }
+                // Retornar JSON con una URL para el PDF
+                string pdfUrl = Url.Action("GeneraPDF_Total", "Home", new { inicio = inicio,fin=fin }, Request.Scheme);
+                return Json(new { respuesta = true, pdfUrl });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { respuesta = false, error = ex.Message });
+                throw;
+
+
+            }
+
+
+        }
         public IActionResult GeneraPDF_Listado(int id)
         {
             try
             {
                 // Buscar la cotización en la base de datos
-                var oCotizacion = _context.Cotizaciones
-                    .Include(c => c.detalles) // Incluir los detalles relacionados
-                    .FirstOrDefault(c => c.id == id);
-
-                if (oCotizacion == null)
+                //var oCotizacion = _context.Cotizaciones
+                //    .Include(c => c.detalles) // Incluir los detalles relacionados
+                //    .FirstOrDefault(c => c.id == id);
+                //if (oCotizacion == null)
+                //{
+                //    return NotFound("Invoice not found.");
+                //}
+                if (id ==0)
                 {
                     return NotFound("Invoice not found.");
                 }
                 // Retornar JSON con una URL para el PDF
-                string pdfUrl = Url.Action("GenerarPdf", "Home", new { id = oCotizacion.id }, Request.Scheme);
+                string pdfUrl = Url.Action("GenerarPdf", "Home", new { id = id }, Request.Scheme);
                 return Json(new { respuesta = true, pdfUrl });
             }
             catch (Exception ex)

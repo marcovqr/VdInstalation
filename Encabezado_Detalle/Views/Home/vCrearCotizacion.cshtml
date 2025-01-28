@@ -17,7 +17,7 @@
             </div>
             <div class="col-sm-2">
                 <label class="form-label">Name</label>
-                <input class="form-control form-control-sm" type="text" id="txtname" />
+                <input class="form-control form-control-sm" type="text" id="txtname"  value="JANOVIC"/>
             </div>
             @* <div class="col-sm-2">
                 <label class="form-label">Nit</label>
@@ -162,7 +162,7 @@
     //BOTON AGREGAR     
        $("#btnAgregar").on("click", function () {
             if ($("#txtproducto").val().trim() === "" || $("#txtcantidad").val().trim() === "" || $("#txtprecio").val().trim() === "") {
-                alert("No ha registrado..Producto, cantidad o precio..!!");
+                alert("Debe ingresar..Description, SKU o Amount..campos obligatorios!!");
                 $("#txtproducto").focus();
            }         
            else 
@@ -188,8 +188,10 @@
                 $("#txtcantidad").val("")
                 $("#txtproducto").focus();
                 productos = productos + 1;
-                total_general = total_general + total;
-                $("#lbltotal").text(total_general);
+                total_general =  total_general + total;
+                //total_general = (Math.round((total_general + total) * 100) / 100).toFixed(2);
+
+                $("#lbltotal").text(total_general.toFixed(2));
            }
                
        })
@@ -265,12 +267,13 @@
             $("#txtproducto").focus();//COLOCA EL ENFOQUE EN EL CAMPO DE TEXTO PRODUCTO
             //console.log($(this).parent().children().eq(-2).text());//selecciona la PENULTIMA columna de la fila que seleccione
             total_general = total_general - $(this).parent().children().eq(-2).text();
-            $("#lbltotal").text(total_general);
+            $("#lbltotal").text(total_general.toFixed(2));
         });
        //VALIDA QUE LOS CAMPOS CANTIDAD Y PRECIO SE DIGITEN SOLO NUMEROS
         $('.txtsolo-numeros').on('input', function () {
             $(this).val($(this).val().replace(/[^0-9.,]/g, '')); // Elimina caracteres no numéricos
         });
+        
         //CONVIERTE A MAYUSCULAS LO QUE SE DIGITE EN PRODUCTO
         $('.txtmayusculas').on('input', function () {
             $(this).val($(this).val().toUpperCase()); // convierte de Mnusculas a Mayusculas

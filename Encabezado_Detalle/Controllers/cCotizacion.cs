@@ -20,8 +20,7 @@ namespace Encabezado_Detalle.Controllers
         }
         public IActionResult ListarCotizaciones(DateTime inicio, DateTime fin)
         {
-            //Coloca en una lista en encabezado con sus respectivos datalles
-            //List<cot_cotizacion> listacot_cotizacion = _context.Cotizaciones.Include(x => x.detalles).Include(x => x.personas).ToList();
+           
             return View();
 
         }
@@ -109,6 +108,36 @@ namespace Encabezado_Detalle.Controllers
             }
             #endregion
         }
+        public IActionResult ListarInvoiceTotales()
+        {
+            return View();
+        }
+        public JsonResult ListarTotales(int inicio, int fin)
+        {
+            //Coloca en una lista en encabezado con sus respectivos datalles
+            List<cot_cotizacion> listacot_cotizacion = new List<cot_cotizacion>();
+            var datos = _context.Cotizaciones.Include(x => x.detalles).Include(x => x.personas)
+                                                   .Where(x => x.id >= inicio && x.id <= fin)
+                                                   .Select(x => new
+                                                   {
+                                                       Id = x.id,
+                                                       fecha = x.Fecha.ToString("yyyy-MM-dd"),
+                                                       Total = x.Total
+                                                     
 
+                                                   }).ToList();
+            //string json = JsonSerializer.Serialize(listacot_cotizacion);            
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true, // Formato legible
+                ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
+            };
+
+            // Serializar a JSON
+            string json = JsonSerializer.Serialize(datos, options);
+            Console.WriteLine(json);
+            // Retorna la lista como un objeto JSON
+            return new JsonResult(datos, options);
+        }
     }
 }

@@ -7,7 +7,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Example 1</title>
+    <title>Invoice @Model.id</title>
      <!-- CSS Files -->
     <!-- CSS Files -->
     <style>
@@ -208,7 +208,7 @@ background-color: #f7f7ff;
                                     <div class="col company-details">
                                         <h2 class="name">
                                             <a target="_blank" href="javascript:;">
-                                                VLDAINSTALATIONS
+                                                VLADINSTALLATIONS
                                             </a>
                                         </h2>
                                         <div>455 Foggy Heights, AZ 85004, US</div>
@@ -221,6 +221,10 @@ background-color: #f7f7ff;
                                 <div class="row contacts">
                                     <div class="col invoice-to">
                                         <div class="text-gray-light">INVOICE TO:</div>
+                                        <h2 class="to">@Model.Name</h2>
+                                          32-02 QUEENS BLVD L.I.C NY 11101
+                                        <hr />
+                                        <div class="text-gray-light">CUSTOMER:</div>
                                         <h2 class="to">@Model.customer</h2>
                                         <div class="address">@Model.adress</div>
                                         <div class="email">@Model.telf</div>
@@ -248,7 +252,7 @@ background-color: #f7f7ff;
                                                 <td>@detalle.Fecha.Value.ToShortDateString()</td>
                                                 <td>@detalle.Store
                                                 <td>@detalle.ProductoNombre</td>
-                                                <td>@detalle.Cantidad</td>
+                                                <td>@detalle.Cantidad.ToString("0")</td>
                                                 <td>@detalle.Precio</td>
                                             </tr>
                                         }

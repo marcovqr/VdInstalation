@@ -1,4 +1,4 @@
-﻿@model cot_cotizacion
+﻿@model List<Encabezado_Detalle.Models.cot_cotizacion>
 @{
     //ViewData["Title"] = "creaPDF";
     Layout = null;
@@ -221,7 +221,7 @@
                                 <div class="row contacts">
                                     <div class="col invoice-to">
                                         <div class="text-gray-light">INVOICE TO:</div>
-                                        <h2 class="to">@Model.Name</h2>
+                                        <h2 class="to">@Model.ElementAt(1).Name </h2>
                                         32-02 QUEENS BLVD L.I.C NY 11101
                                         <hr />
                                        
@@ -237,21 +237,21 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var detalle in Model.detalles)
+                                        @foreach (var detalle in Model)
                                         {
                                             <tr>
                                                 <td>@detalle.id</td>
-                                                <td>@detalle.Fecha.Value.ToShortDateString()</td>
-                                                <td>@detalle.Precio</td>
+                                                <td>@detalle.Fecha.ToShortDateString()</td>
+                                                <td>@detalle.Total</td>
                                             </tr>
                                         }
 
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <td colspan="2"></td>
+                                            <td colspan="2">@Model.ElementAt(2).Total</td>
                                             <td colspan="2">GRAND TOTAL</td>
-                                            <td>$@Model.Total</td>
+                                            <td>$@ViewData["Totalizado"]</td>
                                         </tr>
                                     </tfoot>
                                 </table>

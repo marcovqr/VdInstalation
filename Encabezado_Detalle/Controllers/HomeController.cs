@@ -77,11 +77,14 @@ namespace Encabezado_Detalle.Controllers
                 .Include(c => c.detalles) // Incluir los detalles relacionados
                 .Where(c => c.id >= inicio && c.id <= fin).ToList();
 
-            if (oCotizacion == null)
+            if (oCotizacion == null || !oCotizacion.Any())
             {
-                return NotFound("Invoice not found.");
+                return NotFound("No se encontraron Invoice en ese rango.");
             }
 
+            // Calcular el total de todas las cotizaciones
+            ViewData["Totalizado"] = oCotizacion.Sum(c => c.Total);  // Asumiendo que cada cotización tiene un campo Total
+            //Console.WriteLine(ViewBag.Totalizado);
             // Generar el PDF usando Rotativa
             return new Rotativa.AspNetCore.ViewAsPdf("creaPDF_Totalizado", oCotizacion)
             {

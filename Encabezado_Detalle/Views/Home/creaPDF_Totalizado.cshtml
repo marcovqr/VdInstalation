@@ -211,9 +211,9 @@
                                                 VLADINSTALLATIONS
                                             </a>
                                         </h2>
-                                        <div>455 Foggy Heights, AZ 85004, US</div>
-                                        <div>(123) 456-789</div>
-                                        <div>company@example.com</div>
+                                        <div>5733 CATALPA AV RIDGEWOOD NY 11385</div>
+                                        <div>(347) 525-0267</div>
+                                        <div>vladimirdelvalle3@gmail.com</div>
                                     </div>
                                 </div>
                             </header>
@@ -231,27 +231,26 @@
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>Id</th>
                                             <th>Date</th>
-                                            <th class="text-right">Amount</th>
+                                            <th>Id Invoice</th>
+                                            <th>Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach (var detalle in Model)
                                         {
                                             <tr>
-                                                <td>@detalle.id</td>
-                                                <td>@detalle.Fecha.ToShortDateString()</td>
-                                                <td>@detalle.Total</td>
+                                                <td style="text-align: center;">@detalle.Fecha.ToShortDateString()</td>
+                                                <td style="text-align: center;">@detalle.id</td>
+                                                <td style="text-align: center;">@detalle.Total</td>
                                             </tr>
                                         }
 
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <td colspan="2">@Model.ElementAt(2).Total</td>
                                             <td colspan="2">GRAND TOTAL</td>
-                                            <td>$@ViewData["Totalizado"]</td>
+                                            <td>$@Model.ElementAt(0).estado</td>
                                         </tr>
                                     </tfoot>
                                 </table>

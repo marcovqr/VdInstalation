@@ -27,6 +27,7 @@ namespace Encabezado_Detalle.Models
         public string? Po { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal Total { get; set; }
+        public string? estado { get; set; }
         public virtual ICollection<cot_cotizacion_item> detalles { get; set; }
         //public virtual ICollection<Persona> Clientes { get; set; }
     }

@@ -83,7 +83,7 @@ namespace Encabezado_Detalle.Controllers
             }
 
             // Calcular el total de todas las cotizaciones
-            ViewData["Totalizado"] = oCotizacion.Sum(c => c.Total);  // Asumiendo que cada cotización tiene un campo Total
+            oCotizacion.ElementAt(0).estado = oCotizacion.Sum(c => c.Total).ToString();  // Asumiendo que cada cotización tiene un campo Total
             //Console.WriteLine(ViewBag.Totalizado);
             // Generar el PDF usando Rotativa
             return new Rotativa.AspNetCore.ViewAsPdf("creaPDF_Totalizado", oCotizacion)

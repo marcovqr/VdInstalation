@@ -211,9 +211,9 @@ background-color: #f7f7ff;
                                                 VLADINSTALLATIONS
                                             </a>
                                         </h2>
-                                        <div>455 Foggy Heights, AZ 85004, US</div>
-                                        <div>(123) 456-789</div>
-                                        <div>company@example.com</div>
+                                        <div>5733 CATALPA AV RIDGEWOOD NY 11385</div>
+                                        <div>(347) 525-0267</div>
+                                        <div>vladimirdelvalle3@gmail.com</div>
                                     </div>
                                 </div>
                             </header>
@@ -249,11 +249,11 @@ background-color: #f7f7ff;
                                         @foreach (var detalle in Model.detalles)
                                         {
                                             <tr>
-                                                <td>@detalle.Fecha.Value.ToShortDateString()</td>
-                                                <td>@detalle.Store
-                                                <td>@detalle.ProductoNombre</td>
-                                                <td>@detalle.Cantidad.ToString("0")</td>
-                                                <td>@detalle.Precio</td>
+                                                <td style="text-align: center;">@detalle.Fecha.Value.ToShortDateString()</td>
+                                                <td style="text-align: center;">@detalle.Store
+                                                <td style="text-align: center;">@detalle.ProductoNombre</td>
+                                                <td style="text-align: center;">@detalle.Cantidad.ToString("0")</td>
+                                                <td style="text-align: center;">@detalle.Precio</td>
                                             </tr>
                                         }
 

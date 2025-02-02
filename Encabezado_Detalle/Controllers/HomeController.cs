@@ -75,7 +75,7 @@ namespace Encabezado_Detalle.Controllers
             // Buscar la cotización en la base de datos
             var oCotizacion = _context.Cotizaciones
                 .Include(c => c.detalles) // Incluir los detalles relacionados
-                .Where(c => c.id >= inicio && c.id <= fin).ToList();
+                .Where(c => c.id >= inicio && c.id <= fin && c.estado == "OK").ToList();
 
             if (oCotizacion == null || !oCotizacion.Any())
             {

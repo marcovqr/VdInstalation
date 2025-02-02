@@ -40,7 +40,7 @@ namespace Encabezado_Detalle.Controllers
             List<cot_cotizacion> listacot_cotizacion = new List<cot_cotizacion>();
                 var datos=_context.Cotizaciones.Include(x => x.detalles).Include(x => x.personas)
                                                        //.Where(x => x.Fecha >= inicio && x.Fecha <= fin)
-                                                       .Where(x => x.Fecha >= inicio && x.Fecha <= fin)
+                                                       .Where(x => x.Fecha >= inicio && x.Fecha <= fin && x.estado=="OK")
                                                        .Select(x => new
                                                         {
                                                             Id=x.id,
@@ -117,7 +117,7 @@ namespace Encabezado_Detalle.Controllers
             //Coloca en una lista en encabezado con sus respectivos datalles
             List<cot_cotizacion> listacot_cotizacion = new List<cot_cotizacion>();
             var datos = _context.Cotizaciones.Include(x => x.detalles).Include(x => x.personas)
-                                                   .Where(x => x.id >= inicio && x.id <= fin)
+                                                   .Where(x => x.id >= inicio && x.id <= fin && x.estado == "OK")
                                                    .Select(x => new
                                                    {
                                                        Id = x.id,

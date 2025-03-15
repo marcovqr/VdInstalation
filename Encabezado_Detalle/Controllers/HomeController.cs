@@ -70,6 +70,33 @@ namespace Encabezado_Detalle.Controllers
                 CustomSwitches = "--disable-smart-shrinking"
             };
         }
+        //Genera Pdf de un listado 
+        public IActionResult GenerarPdf_global(string ids)
+        {
+            // Convertir los IDs en una lista
+            var idList = ids.Split(',').Select(int.Parse).ToList();
+
+            // Buscar las cotizaciones correspondientes a esos IDs
+            var cotizaciones = _context.Cotizaciones
+                .Include(c => c.detalles) // Incluir los detalles relacionados
+                .Where(c => idList.Contains(c.id))
+                .ToList();
+
+            if (!cotizaciones.Any())
+            {
+                return NotFound("No se encontraron cotizaciones.");
+            }
+
+            // Generar el PDF usando Rotativa para todas las cotizaciones
+            return new Rotativa.AspNetCore.ViewAsPdf("creaPDF_Global", cotizaciones)
+            {
+                //FileName = $"Invoice_{string.Join("_", idList)}.pdf", // Opcional: para generar un nombre de archivo con los IDs
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                CustomSwitches = "--disable-smart-shrinking"
+            };
+        }
+
         public IActionResult GeneraPDF_Total(int inicio,int fin)
         {
             // Buscar la cotización en la base de datos
@@ -104,6 +131,28 @@ namespace Encabezado_Detalle.Controllers
                 }
                 // Retornar JSON con una URL para el PDF
                 string pdfUrl = Url.Action("GeneraPDF_Total", "Home", new { inicio = inicio,fin=fin }, Request.Scheme);
+                return Json(new { respuesta = true, pdfUrl });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { respuesta = false, error = ex.Message });
+                throw;
+
+
+            }
+
+
+        }
+        public IActionResult GeneraPDF_Glo(string ids)
+        {
+            try
+            {
+                if (ids=="")
+                {
+                    return NotFound("Invoice not found.");
+                }
+                // Retornar JSON con una URL para el PDF
+                string pdfUrl = Url.Action("GenerarPdf_global", "Home", new { ids }, Request.Scheme);
                 return Json(new { respuesta = true, pdfUrl });
             }
             catch (Exception ex)

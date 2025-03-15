@@ -7,6 +7,9 @@
 <h2>Lists Invoice</h2>
 <div class="row-4" style="text-align:right;padding:5px">
     <a href="~/home/vCrearCotizacion" class="btn btn-primary" /> Create New Invoice <a />
+    <!-- Boton -->
+    <input type="button" class="btn btn-primary" value="create selected PDFs" onclick="_crearPDF_global()" />
+    
 </div>
 <div class="row">
     <div class=" col-md-12">
@@ -85,17 +88,7 @@
 {
     <!-- Referencias -->
      
-   @*  <link href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" rel="stylesheet" />
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
-    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
-    <script src="~/assets/js/notify.js"></script>
-    <script src="~/assets/js/notify.min.js"></script> *@
-    
+   
     <!-- Codigo para Cerrar el Modal al dar clic en Cerrar -->
     <script>
         document.querySelector('button[data-dismiss="modal"]').addEventListener('click', function () {
@@ -158,12 +151,12 @@
                         },
                         {
                             target: 6,
-                            width: "5%"
+                            width: "4%"
                         },
 
                         {
                             target: 7,
-                            width: "5%"
+                            width: "10%"
                         }
                     ],
             });
@@ -206,7 +199,7 @@
                             item.Telefono,
                             item.Po,
                             item.Total,
-                            '<a href="#" onclick="Detalles(' + item.Id + ')" <i class="fa fa-list-alt" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <a href="#" onclick="_crearPDF(' + item.Id + ')" <i class="fa fa-file" aria-hidden="true"></i></a>'
+                            '<a href="#" onclick="Detalles(' + item.Id + ')" <i class="fa fa-list-alt" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <a href="#" onclick="_crearPDF(' + item.Id + ')" <i class="fa fa-file" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <input type="checkbox" name="idsSeleccionados" value="' + item.Id + '" />'
                             //'<a href="#" onclick="Detalles(' + item.Id + ')" <i class="fa fa-list-alt" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <a href="#" onclick="_crearPDF(' + item.Id + ')" <i class="fa fa-file" aria-hidden="true"></i></a>'
                         ]);
                     });
@@ -265,8 +258,9 @@
                 $.ajax({
                     url: '/Home/GeneraPDF_Listado?id=' + Id, // Ruta correcta
                     type:'GET',
-                    success: function (data) 
-                    {
+                    success: function (data) {
+                        console.log(data.respuesta)
+                        console.log(data.pdfUrl)
                         if (data.respuesta && data.pdfUrl) {
                             $.notify("PDF generado correctamente.", "success");
                             // Abrir el PDF en una nueva pestaña
@@ -290,7 +284,50 @@
         }
         //fin de creacion PDF desde el Reporte/boton tipo icono para crear pdf
     </script>
-    
+    <script>
+        //Inicio de creacion PDF desde el Reporte/boton tipo icono para crear pdf segun los seleccionados
+        function _crearPDF_global() {
+            // Recolecta los IDs de las transacciones marcadas
+            var selectedIds = [];
+            $('input[name="idsSeleccionados"]:checked').each(function () {
+                selectedIds.push($(this).val());
+            });
+            console.log(selectedIds.join(','));
+            // Si no hay transacciones seleccionadas, muestra un mensaje y sale de la función
+            if (selectedIds.length === 0) {
+                alert('No se han seleccionado transacciones.');
+                return;
+            }
+
+            // Proceso AJAX para llamar al controlador enviando los IDs de las transacciones seleccionadas
+            try {
+                $.ajax({
+                    url: '/Home/GeneraPDF_Glo', // Ruta del controlador
+                    type: 'GET',
+                    data: { ids: selectedIds.join(',') }, // Pasamos los IDs como una cadena separada por comas
+                    success: function (data) {
+                        
+                        if (data.pdfUrl) {
+                            $.notify("PDF generado correctamente.", "success");
+                            // Abrir el PDF en una nueva pestaña
+                            window.open(data.pdfUrl, '_blank');
+                        } else {
+                            $.notify(data.mensaje || "Error al generar el PDF.", "error");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error al obtener los datos AJAX:', error);
+                        // Notificación de error
+                        $.notify("Error al cargar los datos AJAX", "error");
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Ocurrió un error al procesar la solicitud TRY CATCH.');
+            }
+        }
+
+    </script>
     
        
 }

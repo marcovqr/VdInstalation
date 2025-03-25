@@ -23,6 +23,7 @@ namespace Encabezado_Detalle.Controllers
             return View(listacot_cotizacion);
             
         }
+        #region[Creacion de invoice recibe datos de la vista.apenas se crea se genera el pdf.]
         //Controlador que recibe datos desde la Vista
         [HttpPost]
         public IActionResult Index([FromBody] cotizacionVM_MaestroDetalle oCotizacionVM)
@@ -41,13 +42,11 @@ namespace Encabezado_Detalle.Controllers
             catch (Exception ex)
             {
                 return Json(new { respuesta = false, error = ex.Message });
-                throw;
-                
-
+                throw;               
             }
-           
-           
         }
+        #endregion
+        #region[Metodo Global para crear el PDF]
         // Acción para generar el PDF con Rotativa
         public IActionResult GenerarPdf(int id)
         {
@@ -70,7 +69,9 @@ namespace Encabezado_Detalle.Controllers
                 CustomSwitches = "--disable-smart-shrinking"
             };
         }
-        //Genera Pdf de un listado 
+        #endregion
+        #region[Metodo para crear varios invoice en un solo PDF desde la vista,aki se llama la vista q ve el usuario ]
+        //Genera varios invoice en un solo Pdf de un listado 
         public IActionResult GenerarPdf_global(string ids)
         {
             // Convertir los IDs en una lista
@@ -96,7 +97,8 @@ namespace Encabezado_Detalle.Controllers
                 CustomSwitches = "--disable-smart-shrinking"
             };
         }
-
+        #endregion
+        #region[Metodo global para generar pdf totalizado, aki se llama la vista q ve el usuario ]
         public IActionResult GeneraPDF_Total(int inicio,int fin)
         {
             // Buscar la cotización en la base de datos
@@ -121,6 +123,8 @@ namespace Encabezado_Detalle.Controllers
                 CustomSwitches = "--disable-smart-shrinking"
             };
         }
+        #endregion
+        #region[Metodo para crear PDF totalizado segun rango de invoice que se ingresen en la vista ]
         public IActionResult GeneraPDF_Totalizado(int inicio , int fin)
         {
             try
@@ -137,12 +141,10 @@ namespace Encabezado_Detalle.Controllers
             {
                 return Json(new { respuesta = false, error = ex.Message });
                 throw;
-
-
             }
-
-
         }
+        #endregion
+        #region[Metodo para crear varios invoice en un solo PDF recibe desde la vista lo seleccionado]
         public IActionResult GeneraPDF_Glo(string ids)
         {
             try
@@ -159,24 +161,15 @@ namespace Encabezado_Detalle.Controllers
             {
                 return Json(new { respuesta = false, error = ex.Message });
                 throw;
-
-
             }
-
-
         }
+        #endregion
+        #region[Metodo que recibe desde el listado un invoice para generar el PDF]
         public IActionResult GeneraPDF_Listado(int id)
         {
             try
             {
-                // Buscar la cotización en la base de datos
-                //var oCotizacion = _context.Cotizaciones
-                //    .Include(c => c.detalles) // Incluir los detalles relacionados
-                //    .FirstOrDefault(c => c.id == id);
-                //if (oCotizacion == null)
-                //{
-                //    return NotFound("Invoice not found.");
-                //}
+               
                 if (id ==0)
                 {
                     return NotFound("Invoice not found.");
@@ -189,12 +182,9 @@ namespace Encabezado_Detalle.Controllers
             {
                 return Json(new { respuesta = false, error = ex.Message });
                 throw;
-
-
             }
-
-
         }
+        #endregion
         public IActionResult vCrearCotizacion()
         {
             //Coloca en una lista en encabezado con sus respectivos datalles

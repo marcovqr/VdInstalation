@@ -139,5 +139,6 @@ namespace Encabezado_Detalle.Controllers
             // Retorna la lista como un objeto JSON
             return new JsonResult(datos, options);
         }
+        
     }
 }

@@ -229,7 +229,67 @@ namespace Encabezado_Detalle.Controllers
             return Json(model);
 
         }
+        #region[Eliminar Invoice]
+        public async Task<bool> EliminarInvoice(int id)
+        {
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    // Buscar la cotización principal
+                    var cotizacion = await _context.Cotizaciones.FindAsync(id);
+                    if (cotizacion == null) return false; // Si no existe, no hay nada que eliminar.
 
+                    // Buscar los detalles relacionados con la cotización
+                    var detalles = await _context.Cot_Cotizacion_Items
+                                                 .Where(d => d.id_cot_cotizacion == id)
+                                                 .ToListAsync();
+
+                    // Eliminar los detalles primero
+                    if (detalles.Any())
+                    {
+                        _context.Cot_Cotizacion_Items.RemoveRange(detalles);
+                    }
+
+                    // Eliminar la cotización principal
+                    _context.Cotizaciones.Remove(cotizacion);
+
+                    await _context.SaveChangesAsync();
+
+                    // Obtener el último ID válido de la tabla principal (cotizaciones)
+                    var ultimoId = await _context.Cotizaciones.MaxAsync(x => (int?)x.id) ?? 0;
+
+                    // Reiniciar el contador IDENTITY en la tabla cotizaciones
+                    await _context.Database.ExecuteSqlRawAsync($"DBCC CHECKIDENT ('cot_cotizacion', RESEED, {ultimoId})");
+
+                    await transaction.CommitAsync();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    Console.WriteLine($"Error eliminando cotización: {ex.Message}");
+                    return false;
+                }
+            }
+        }
+
+        #endregion
+        #region[Elimina registro]
+        [HttpPost]
+        public async Task<IActionResult> EliminarRegistro(int id)
+        {
+            var resultado = await this.EliminarInvoice(id);
+            if (resultado)
+            {
+                //return RedirectToAction("Index"); // O la vista que corresponda
+                // Si el resultado es verdadero, devuelve un JSON con true
+                return Json(new { respuesta = true, mensaje= "Invoice Anulado correctamente" });
+            }
+            // Si el resultado es falso, devuelve un mensaje de error
+            return BadRequest(new { mensaje = "Error al eliminar el registro." });
+        }
+        #endregion
 
     }
 }

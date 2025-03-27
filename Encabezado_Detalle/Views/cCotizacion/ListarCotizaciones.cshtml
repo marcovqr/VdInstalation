@@ -138,11 +138,11 @@
                         },
                         {
                             target: 3,
-                            width: "30%"
+                            width: "25%"
                         },
                         {
                             target: 4,
-                            width: "00%"
+                            width: "10%"
                         },
                         {
                             target: 5,
@@ -156,7 +156,7 @@
 
                         {
                             target: 7,
-                            width: "10%"
+                            width: "15%"
                         }
                     ],
             });
@@ -194,7 +194,7 @@
                             item.Telefono,
                             item.Po,
                             item.Total,
-                            '<a href="#" onclick="Detalles(' + item.Id + ')" <i class="fa fa-list-alt" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <a href="#" onclick="_crearPDF(' + item.Id + ')" <i class="fa fa-file" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <input type="checkbox" name="idsSeleccionados" value="' + item.Id + '" />'
+                            '<a href="#" onclick="Detalles(' + item.Id + ')" <i class="fa fa-list-alt" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <a href="#" onclick="_crearPDF(' + item.Id + ')" <i class="fa fa-file" aria-hidden="true"></i></a> <a href="#" onclick="_AnularInvoice(' + item.Id + ')" <i class="fa-solid fa-trash"></i></a> &nbsp;&nbsp;&nbsp; <input type="checkbox" name="idsSeleccionados" value="' + item.Id + '" />'
                             //'<a href="#" onclick="Detalles(' + item.Id + ')" <i class="fa fa-list-alt" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <a href="#" onclick="_crearPDF(' + item.Id + ')" <i class="fa fa-file" aria-hidden="true"></i></a>'
                         ]);
                     });
@@ -322,6 +322,40 @@
             }
         }
 
+    </script>
+    <script>
+        function _AnularInvoice(Id) {   //Pregunta si en Id viene el id del invoice caso contrario no sigue
+            if (!Id) {
+                alert('ID de cotización no especificado.');
+                return;
+            }
+            //Proceso ajax para llamar al controlador enviandole un parametro y me devuelve un resultado
+            try {
+                $.ajax({
+                    url: '/Home/EliminarRegistro?id=' + Id, // Ruta correcta
+                    type: 'POST',
+                    success: function (data) {
+                        if (data.respuesta) {
+                            alert('Invoice Anulado correctamente..!');
+                            $.notify(data.mensaje, "success");
+                            location.reload(); // Recarga la página completamente
+                        } else {
+                            $.notify(data.mensaje || "Error al anular Invoice.", "error");
+
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error al obtener los datos AJAX en anulacion de Invoice:', error);
+                        // Notificación de error
+                        $.notify("Error al cargar los datos AJAX en anulacion de Invoice:", "error");
+                    }
+                });
+            } catch (error) {
+                console.error('Error en anulacion de Invoice::', error);
+                alert('Ocurrió un error al procesar la solicitud TRY CATCH.');
+            }
+
+        }
     </script>
     
        

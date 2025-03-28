@@ -194,7 +194,7 @@
                             item.Telefono,
                             item.Po,
                             item.Total,
-                            '<a href="#" onclick="Detalles(' + item.Id + ')" <i class="fa fa-list-alt" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <a href="#" onclick="_crearPDF(' + item.Id + ')" <i class="fa fa-file" aria-hidden="true"></i></a> <a href="#" onclick="_AnularInvoice(' + item.Id + ')" <i class="fa-solid fa-trash"></i></a> &nbsp;&nbsp;&nbsp; <input type="checkbox" name="idsSeleccionados" value="' + item.Id + '" />'
+                            '<a href="#" onclick="Detalles(' + item.Id + ')" title="DetailInvoice"> <i class="fa fa-list-alt" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <a href="#" onclick="_crearPDF(' + item.Id + ')" title="CreatePDF"> <i class="fa fa-file" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <a href="#" onclick="_AnularInvoice(' + item.Id + ')" title="Delete"> <i class="fa fa-trash" aria-hidden="true"></i> </a> &nbsp;&nbsp;&nbsp; <input type="checkbox" name="idsSeleccionados" value="' + item.Id + '" />'
                             //'<a href="#" onclick="Detalles(' + item.Id + ')" <i class="fa fa-list-alt" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <a href="#" onclick="_crearPDF(' + item.Id + ')" <i class="fa fa-file" aria-hidden="true"></i></a>'
                         ]);
                     });
@@ -336,9 +336,10 @@
                     type: 'POST',
                     success: function (data) {
                         if (data.respuesta) {
-                            alert('Invoice Anulado correctamente..!');
+                            //alert('Invoice Anulado correctamente..!');
                             $.notify(data.mensaje, "success");
-                            location.reload(); // Recarga la página completamente
+                            //location.reload(); // Recarga la página completamente
+                             Buscar();
                         } else {
                             $.notify(data.mensaje || "Error al anular Invoice.", "error");
 

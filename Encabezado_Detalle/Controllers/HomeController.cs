@@ -257,7 +257,9 @@ namespace Encabezado_Detalle.Controllers
                     await _context.SaveChangesAsync();
 
                     // Obtener el último ID válido de la tabla principal (cotizaciones)
-                    var ultimoId = await _context.Cotizaciones.MaxAsync(x => (int?)x.id) ?? 0;
+                    var ultimoId = await _context.Cotizaciones
+                                   .AsNoTracking() // Evita el uso de caché
+                                   .MaxAsync(x => (int?)x.id) ?? 0;
 
                     // Reiniciar el contador IDENTITY en la tabla cotizaciones
                     await _context.Database.ExecuteSqlRawAsync($"DBCC CHECKIDENT ('cot_cotizacion', RESEED, {ultimoId})");

@@ -9,7 +9,7 @@
     <a href="~/home/vCrearCotizacion" class="btn btn-primary" /> Create New Invoice <a />
     <!-- Boton -->
     <input type="button" class="btn btn-primary" value="create selected PDFs" onclick="_crearPDF_global()" />
-    
+    <input type="button" class="btn btn-primary" value="Check/Uncheck All" onclick="_MarcarTodosCheckboxes()" />
 </div>
 <div class="row">
     <div class=" col-md-12">
@@ -34,7 +34,7 @@
                     <!-- Boton -->
                     <div class="col-sm-3">
                          <input type="button" class="btn btn-primary btn-sm" value="Buscar" onclick="Buscar()" data-toggle="modal" data-target="#exampleModalCenter" />
-                       
+                         
                     </div>
                 </div>
             </div>
@@ -194,7 +194,7 @@
                             item.Telefono,
                             item.Po,
                             item.Total,
-                            '<a href="#" onclick="Detalles(' + item.Id + ')" title="DetailInvoice"> <i class="fa fa-list-alt" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <a href="#" onclick="_crearPDF(' + item.Id + ')" title="CreatePDF"> <i class="fa fa-file" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <a href="#" onclick="_AnularInvoice(' + item.Id + ')" title="Delete"> <i class="fa fa-trash" aria-hidden="true"></i> </a> &nbsp;&nbsp;&nbsp; <input type="checkbox" name="idsSeleccionados" value="' + item.Id + '" />'
+                            '<a href="#" onclick="Detalles(' + item.Id + ')" title="DetailInvoice"> <i class="fa fa-list-alt" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <a href="#" onclick="_crearPDF(' + item.Id + ')" title="CreatePDF"> <i class="fa fa-file" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <a href="#" onclick="_AnularInvoice(' + item.Id + ')" title="Delete"> <i class="fa fa-trash" aria-hidden="true"></i> </a> &nbsp;&nbsp;&nbsp; <input type="checkbox" name="idsSeleccionados" class="chkFila" value="' + item.Id + '" />'
                             //'<a href="#" onclick="Detalles(' + item.Id + ')" <i class="fa fa-list-alt" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp; <a href="#" onclick="_crearPDF(' + item.Id + ')" <i class="fa fa-file" aria-hidden="true"></i></a>'
                         ]);
                     });
@@ -358,6 +358,27 @@
 
         }
     </script>
-    
+    <script>
+        function _MarcarTodosCheckboxes() {
+            try {
+                let checkboxes = document.querySelectorAll(".chkFila"); // Clase común para tus checkboxes
+                if (checkboxes.length === 0) {
+                    $.notify("No hay checkboxes para seleccionar.", "warn");
+                    return;
+                }
+
+                // Verifica si al menos uno no está marcado
+                let hayDesmarcados = Array.from(checkboxes).some(cb => !cb.checked);
+
+                // Marca o desmarca todos según el estado
+                checkboxes.forEach(cb => cb.checked = hayDesmarcados);
+
+                $.notify(hayDesmarcados ? "Todos los checkboxes han sido marcados." : "Todos los checkboxes han sido desmarcados.", "success");
+            } catch (error) {
+                console.error('Error al marcar/desmarcar checkboxes:', error);
+                $.notify("Ocurrió un error al marcar/desmarcar checkboxes.", "error");
+            }
+        }
+    </script>
        
 }
